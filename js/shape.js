@@ -5,13 +5,12 @@ class shape {
         this.program = program; // WebGL program
         this.name = name;
 
-        this.color = [Math.random(), Math.random(), Math.random()]; // default color of the shape
+        this.color = [1, 1, 1]; // default color of the shape
         this.lightingDirection = [0, 3, 0]; // default lighting direction
-        this.diffuseLight = []; // default lighting color
-        this.ambientLight = []; // default ambient light
-        this.specularLight = []; // default specular light
+        this.diffuseLight = [0.8, 0.8, 0.8]; // default diffuse light
+        this.ambientLight = [0.2, 0.2, 0.2]; // default ambient light
+        this.specularLight = [0.5, 0.5, 0.5]; // default specular light
         this.shininess = 0; // default shininess
-        this.shading = 0; // default shading
 
         this.modelMatrix = glMatrix.mat4.create(); // each shape has its own model matrix
 
@@ -74,7 +73,6 @@ class shape {
         this.diffuseLight = ModelMaterialsArray[index].diffusem;
         this.specularLight = ModelMaterialsArray[index].specularm;
         this.shininess = ModelMaterialsArray[index].shininess;
-        this.shading = ModelMaterialsArray[index].shadingm;
     }
 
     /* PREPARE OBJECT FOR DRAWING */
@@ -95,13 +93,11 @@ class shape {
 
 
         // normal attribute
-        // const normalAttributeLocation = this.gl.getAttribLocation(this.program, "a_normal");
-        // this.normalBuffer = createBuffer(this.gl, new Float32Array(this.normals), this.gl.ARRAY_BUFFER);
-        // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalBuffer);
-        // this.gl.vertexAttribPointer(normalAttributeLocation, size, type, normalize, stride, offset);
-        // this.gl.enableVertexAttribArray(normalAttributeLocation);
-
-
+        const normalAttributeLocation = this.gl.getAttribLocation(this.program, "a_normal");
+        this.normalBuffer = createBuffer(this.gl, new Float32Array(this.normals), this.gl.ARRAY_BUFFER);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalBuffer);
+        this.gl.vertexAttribPointer(normalAttributeLocation, size, type, normalize, stride, offset);
+        this.gl.enableVertexAttribArray(normalAttributeLocation);
     }
 
     setObjectUniforms() {
@@ -114,24 +110,26 @@ class shape {
         this.gl.uniform3fv(u_color_location, this.color);
 
         // set up lighting
-        const u_lightColorLocation = this.gl.getUniformLocation(this.program, "u_lightColor");
-        const u_ambientLightLocation = this.gl.getUniformLocation(this.program, "u_ambientLight");
-        const u_lightDirectionLocation = this.gl.getUniformLocation(this.program, "u_lightDirection");
+        const u_lightingDirectionLocation = this.gl.getUniformLocation(this.program, "u_lightingDirection");
+        const u_ambientMaterialLocation = this.gl.getUniformLocation(this.program, "u_ambientMaterial");
+        const u_diffuseMaterialLocation = this.gl.getUniformLocation(this.program, "u_diffuseMaterial");
+        const u_specularMaterialLocation = this.gl.getUniformLocation(this.program, "u_specularMaterial");
+        const u_shininessLocation = this.gl.getUniformLocation(this.program, "u_shininess");
         
-        this.gl.uniform3fv(u_lightColorLocation, this.diffuseLight);
-        this.gl.uniform3fv(u_lightDirectionLocation, this.lightingDirection);
-        this.gl.uniform3fv(u_ambientLightLocation, this.ambientLight);
+        this.gl.uniform3fv(u_lightingDirectionLocation, this.lightingDirection);
+        this.gl.uniform3fv(u_ambientMaterialLocation, this.ambientLight);
+        this.gl.uniform3fv(u_diffuseMaterialLocation, this.diffuseLight);
+        this.gl.uniform3fv(u_specularMaterialLocation, this.specularLight);
+        this.gl.uniform1f(u_shininessLocation, this.shininess);
     }
 
     setupTexture() {
         // set up texture
         const useTextureLocation = this.gl.getUniformLocation(this.program, "u_useTexture");
-        
         if (this.texture == null) {
             this.gl.uniform1i(useTextureLocation, 0);
             return;
         }
-        
         this.gl.uniform1i(useTextureLocation, 1);
 
         this.gl.activeTexture(this.gl.TEXTURE0);

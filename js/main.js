@@ -46,7 +46,6 @@ async function myMain() {
 
     // create the crate
     const crate = new shape(gl, program, "crate");
-    crate.setColor([1, 1, 1]);
     crate.translate([0, 0, -5]);
     crate.loadAttributes(ModelAttributeArray, 0);
     crate.loadMaterial(ModelMaterialsArray, ModelAttributeArray[0].materialIndex);

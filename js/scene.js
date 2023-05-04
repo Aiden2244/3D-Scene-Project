@@ -4,21 +4,26 @@ class scene {
         this.gl = gl;
         this.program = program;
 
-        this.initializeCanvas();
-        this.initializeCamera();
-
         this.projectionMatrix = glMatrix.mat4.create();
         glMatrix.mat4.perspective(this.projectionMatrix, 45 * Math.PI / 180, this.canvas.width / this.canvas.height, 0.1, 100.0);
         this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.program, "projectionMatrix"), false, this.projectionMatrix);
-
+        
         this.clock = 0;
         this.flag = 1;
-
+        
         this.objects = [];
 
+        this.ambientLight = [0.2, 0.2, 0.2, 1.0];
+        this.diffuseLight = [0.8, 0.8, 0.8, 1.0];
+        this.specularLight = [0.5, 0.5, 0.5, 1.0];
+        
+        this.initializeCanvas();
+        this.initializeCamera();
+        this.initializeLighting();
         
     }
 
+    /* INITIALIZE FUNCTIONS */
     initializeCanvas() {
         // clear color
         this.gl.clearColor(0.0, 0.4, 0.8, 1.0); // set the color to black
@@ -35,7 +40,31 @@ class scene {
         this.camera.addEventListeners();
     }
 
+    initializeLighting() {
+        this.gl.uniform4fv(this.gl.getUniformLocation(this.program, "u_ambientLight"), this.ambientLight);
+        this.gl.uniform4fv(this.gl.getUniformLocation(this.program, "u_diffuseLight"), this.diffuseLight);
+        this.gl.uniform4fv(this.gl.getUniformLocation(this.program, "u_specularLight"), this.specularLight);
+    }
+    /******/
 
+    /* GLOBAL LIGHTING FUNCTIONS */
+    setAmbientLight(ambientLight) {
+        this.ambientLight = ambientLight;
+        this.initializeLighting();
+    }
+
+    setDiffuseLight(diffuseLight) {
+        this.diffuseLight = diffuseLight;
+        this.initializeLighting();
+    }
+
+    setSpecularLight(specularLight) {
+        this.specularLight = specularLight;
+        this.initializeLighting();
+    }
+    /******/
+
+    /* ANIMATION AND OBJECT FUNCTIONS */
     animate() {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); // clear the canvas
         
@@ -74,3 +103,4 @@ class scene {
         this.objects.push(object);
     }
 }
+/******/
