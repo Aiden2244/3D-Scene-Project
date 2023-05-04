@@ -62,10 +62,9 @@ class shape {
         this.textureCoords = ModelAttributeArray[index].textureCoords;
         this.indices = ModelAttributeArray[index].indices;
 
-        this.positionBuffer = createBuffer(this.gl, new Float32Array(this.vertices), this.gl.ARRAY_BUFFER);
         this.indexBuffer = createBuffer(this.gl, new Uint16Array(this.indices), this.gl.ELEMENT_ARRAY_BUFFER);
         this.textureCoordBuffer = createBuffer(this.gl, new Float32Array(this.textureCoords), this.gl.ARRAY_BUFFER);
-        this.normalBuffer = createBuffer(this.gl, new Float32Array(this.normals), this.gl.ARRAY_BUFFER);
+        
 
     }
 
@@ -78,13 +77,34 @@ class shape {
         this.shading = ModelMaterialsArray[index].shadingm;
     }
 
+    /* PREPARE OBJECT FOR DRAWING */
+    setObjectAttributes() {
+        // vars for vertex attributes
+        const size = 3;
+        const type = this.gl.FLOAT;
+        const normalize = false;
+        const stride = 0;
+        const offset = 0;
 
-    /* DRAW FUNCTION */
-    draw() {
-        // set up vertex attributes
+        // position attribute
         const positionAttributeLocation = this.gl.getAttribLocation(this.program, "a_position");
+        this.positionBuffer = createBuffer(this.gl, new Float32Array(this.vertices), this.gl.ARRAY_BUFFER);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+        this.gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+        this.gl.enableVertexAttribArray(positionAttributeLocation);
 
 
+        // normal attribute
+        // const normalAttributeLocation = this.gl.getAttribLocation(this.program, "a_normal");
+        // this.normalBuffer = createBuffer(this.gl, new Float32Array(this.normals), this.gl.ARRAY_BUFFER);
+        // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalBuffer);
+        // this.gl.vertexAttribPointer(normalAttributeLocation, size, type, normalize, stride, offset);
+        // this.gl.enableVertexAttribArray(normalAttributeLocation);
+
+
+    }
+
+    setObjectUniforms() {
         // set up model matrix
         const modelMatrix = this.modelMatrix;
         this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.program, "modelMatrix"), false, modelMatrix);
@@ -92,17 +112,6 @@ class shape {
         // set up color uniform
         const u_color_location = this.gl.getUniformLocation(this.program, "u_color");
         this.gl.uniform3fv(u_color_location, this.color);
-    
-        const size = 3;
-        const type = this.gl.FLOAT;
-        const normalize = false;
-        const stride = 0;
-        const offset = 0;
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
-        this.gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
-        this.gl.enableVertexAttribArray(positionAttributeLocation);
-
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
         // set up lighting
         const u_lightColorLocation = this.gl.getUniformLocation(this.program, "u_lightColor");
@@ -112,33 +121,45 @@ class shape {
         this.gl.uniform3fv(u_lightColorLocation, this.diffuseLight);
         this.gl.uniform3fv(u_lightDirectionLocation, this.lightingDirection);
         this.gl.uniform3fv(u_ambientLightLocation, this.ambientLight);
+    }
+
+    setupTexture() {
+        // set up texture
+        const useTextureLocation = this.gl.getUniformLocation(this.program, "u_useTexture");
+        
+        if (this.texture == null) {
+            this.gl.uniform1i(useTextureLocation, 0);
+            return;
+        }
+        
+        this.gl.uniform1i(useTextureLocation, 1);
+
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+        const textureLocation = this.gl.getUniformLocation(this.program, "u_texture");
+        this.gl.uniform1i(textureLocation, 0);
+
+        const textureCoordAttributeLocation = this.gl.getAttribLocation(this.program, "a_texCoord");
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureCoordBuffer); // Add this line
+        this.gl.vertexAttribPointer(textureCoordAttributeLocation, 2, this.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(textureCoordAttributeLocation);
+    }
+
+    /* DRAW FUNCTION */
+    draw() {
+
+        // set up vertex attributes
+        this.setObjectAttributes();
+
+        // set up uniforms
+        this.setObjectUniforms();
 
         // set up texture
-
-        const useTextureLocation = this.gl.getUniformLocation(this.program, "u_useTexture");
-        if (this.texture != null) {
-            
-            this.gl.uniform1i(useTextureLocation, 1);
-
-            this.gl.activeTexture(this.gl.TEXTURE0);
-            this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
-            const textureLocation = this.gl.getUniformLocation(this.program, "u_texture");
-            this.gl.uniform1i(textureLocation, 0);
-
-            const textureCoordAttributeLocation = this.gl.getAttribLocation(this.program, "a_texCoord");
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureCoordBuffer); // Add this line
-            this.gl.vertexAttribPointer(textureCoordAttributeLocation, 2, this.gl.FLOAT, false, 0, 0);
-            this.gl.enableVertexAttribArray(textureCoordAttributeLocation);
-
-        }
-        else {
-            this.gl.uniform1i(useTextureLocation, 0);
-        }
-
+        this.setupTexture();
 
         // draw
         const primitiveType = this.gl.TRIANGLES;
         const count = this.indices.length;
-        this.gl.drawElements(primitiveType, count, this.gl.UNSIGNED_SHORT, offset);
+        this.gl.drawElements(primitiveType, count, this.gl.UNSIGNED_SHORT, 0);
     }
 }
