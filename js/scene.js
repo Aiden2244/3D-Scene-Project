@@ -32,21 +32,17 @@ class scene {
 
     initializeCamera() {
         this.camera = new camera(this.gl, this.program);
-
         this.camera.addEventListeners();
-        console.log(this.camera.position);
     }
 
 
     animate() {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); // clear the canvas
         
-        
         /* INSERT SHAPE ANIMATIONS HERE */
         animateYRotation(this.objects[0], 1);
         animateYTranslation(this.objects[0], this.flag, 0.25);
         animateYScaling(this.objects[0], this.flag, 0.25);
-        
         /******/
     
     
