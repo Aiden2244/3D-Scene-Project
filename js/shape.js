@@ -10,7 +10,7 @@ class shape {
         this.diffuseLight = [0.8, 0.8, 0.8]; // default diffuse light
         this.ambientLight = [0.2, 0.2, 0.2]; // default ambient light
         this.specularLight = [0.5, 0.5, 0.5]; // default specular light
-        this.shininess = 0; // default shininess
+        this.shininess = 72; // default shininess
 
         this.modelMatrix = glMatrix.mat4.create(); // each shape has its own model matrix
 
@@ -60,11 +60,6 @@ class shape {
         this.normals = ModelAttributeArray[index].normals;
         this.textureCoords = ModelAttributeArray[index].textureCoords;
         this.indices = ModelAttributeArray[index].indices;
-
-        this.indexBuffer = createBuffer(this.gl, new Uint16Array(this.indices), this.gl.ELEMENT_ARRAY_BUFFER);
-        this.textureCoordBuffer = createBuffer(this.gl, new Float32Array(this.textureCoords), this.gl.ARRAY_BUFFER);
-        
-
     }
 
     /* OBJECT MATERIAL FUNCTIONS */
@@ -98,6 +93,9 @@ class shape {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalBuffer);
         this.gl.vertexAttribPointer(normalAttributeLocation, size, type, normalize, stride, offset);
         this.gl.enableVertexAttribArray(normalAttributeLocation);
+
+        // index buffer
+        this.indexBuffer = createBuffer(this.gl, new Uint16Array(this.indices), this.gl.ELEMENT_ARRAY_BUFFER);
     }
 
     setObjectUniforms() {
@@ -138,6 +136,7 @@ class shape {
         this.gl.uniform1i(textureLocation, 0);
 
         const textureCoordAttributeLocation = this.gl.getAttribLocation(this.program, "a_texCoord");
+        this.textureCoordBuffer = createBuffer(this.gl, new Float32Array(this.textureCoords), this.gl.ARRAY_BUFFER);
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureCoordBuffer); // Add this line
         this.gl.vertexAttribPointer(textureCoordAttributeLocation, 2, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(textureCoordAttributeLocation);

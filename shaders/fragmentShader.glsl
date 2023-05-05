@@ -45,7 +45,7 @@ void main() {
 
     vec4 texColor = vec4(texture(u_texture, v_texCoord)); // Sample the texture
     if (u_useTexture) {
-        fragColor = v_color * color * texColor; // Multiply color with texture color
+        fragColor = v_color * color * vec4(texColor.rgb, 1.0); // Multiply color with texture color
     } else {
         fragColor = v_color * color;
     }
