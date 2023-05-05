@@ -59,7 +59,7 @@ async function myMain() {
     await loadExternalJSON('./models/Airplane/airplane.json');
 
     // load the plane texture
-    const planeTexture = await loadImageAsTexture(gl, "./models/Airplane/textures/diffuse.png");
+    const planeTexture = await loadImageAsTexture(gl, "./models/Airplane/textures/normal.png");
 
     // let's make a plane
     const plane = new shape(gl, program);
@@ -99,77 +99,53 @@ async function myMain() {
 function createModelAttributeArray(obj2) {
     console.log('In createModelAttributeArray...');
     console.log(obj2.meshes.length);
-    // obj.mesh[x] is an array of attributes
-    // vertices, normals, texture coord, indices
 
-    // get number of meshes
     let numMeshIndexs = obj2.meshes.length;
     let idx = 0;
     for (idx = 0; idx < numMeshIndexs; idx++) {
         let modelObj = {};
 
-        // get vertices
         modelObj.vertices = obj2.meshes[idx].vertices;
-        /* similar for 
-            normals (if they exists)
-            texture coordinates (if they exists)
-            texture (if it exists)
-            indices (for drawElements)
-            materialIndex (materials to use for these attributes)
-        */
         modelObj.normals = obj2.meshes[idx].normals;
-        modelObj.textureCoords = obj2.meshes[idx].texturecoords[0];
-        modelObj.indices = [];
-        for (let i = 0; i < obj2.meshes[idx].faces.length; i++) {
-            let tmp = modelObj.indices;
-            let concat = obj2.meshes[idx].faces[i];
-            modelObj.indices = tmp.concat(concat);
+
+        if (obj2.meshes[idx].hasOwnProperty('texturecoords')) {
+            modelObj.textureCoords = obj2.meshes[idx].texturecoords[0];
         }
+
+        modelObj.indices = obj2.meshes[idx].faces.flat();
         modelObj.materialIndex = obj2.meshes[idx].materialindex;
 
-        // push onto array
         ModelAttributeArray.push(modelObj);
     }
 }
-/**
- * @function createMaterialsArray - Extracts the Materials from JSON and stores them in ModelAttribute Array
- * attributes include {ambient, diffuse, shininess, specular and possible textures}
- * @param {JSON} obj2 3D Model in JSON Format
- * 
- * 
- */
-function createMaterialsArray(obj2){
+
+function createMaterialsArray(obj2) {
     console.log('In createMaterialsArray...');
-    console.log(obj2.meshes.length);
-    // length of the materials array
-    // loop through array extracting material properties 
-    // needed for rendering
+    console.log(obj2.materials.length);
+
     let itr = obj2.materials.length;
     let idx = 0;
 
-    // each iteration extracts a group of materials from JSON 
     for (idx = 0; idx < itr; idx++) {
         let met = {};
-        // shading 
-        met.shadingm = obj2.materials[idx].properties[1].value;
-        /**
-         * similar for
-         * ambient
-         * diffuse
-         * specular
-         * shininess
-         */
-        met.ambientm = obj2.materials[idx].properties[2].value;
-        met.diffusem = obj2.materials[idx].properties[3].value;
-        met.specularm = obj2.materials[idx].properties[4].value;
-        met.shininess = obj2.materials[idx].properties[5].value;
 
+        let materialProperties = obj2.materials[idx].properties;
+        let materialPropsObj = {};
 
-        // object containing all the illumination comp needed to 
-        // illuminate faces using material properties for index idx
+        materialProperties.forEach(prop => {
+            materialPropsObj[prop.key] = prop.value;
+        });
+
+        met.shadingm = materialPropsObj["$mat.shadingm"];
+        met.ambientm = materialPropsObj["$clr.ambient"];
+        met.diffusem = materialPropsObj["$clr.diffuse"];
+        met.specularm = materialPropsObj["$clr.specular"];
+        met.shininess = materialPropsObj["$mat.shininess"];
+
         ModelMaterialsArray.push(met);
     }
 }
+
 
 
 // load an external object using 
