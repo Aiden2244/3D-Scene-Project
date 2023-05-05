@@ -45,8 +45,8 @@ async function myMain() {
     const crateTexture = await loadImageAsTexture(gl, "./models/crate/texture/simple_crate_tex.jpg");    
 
     // create the crate
-    const crate = new shape(gl, program, "crate");
-    crate.translate([0, 0, -5]);
+    const crate = new shape(gl, program);
+    // crate.translate([0, 0, -5]);
     crate.loadAttributes(ModelAttributeArray, 0);
     crate.loadMaterial(ModelMaterialsArray, ModelAttributeArray[0].materialIndex);
     crate.setTexture(crateTexture);
