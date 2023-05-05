@@ -1,6 +1,16 @@
 /* ESSENTIAL FUNCTIONS FOR WORKING WITH WEBGL */
 
-// build and compile shader
+/**
+ * Builds and compiles a shader from the specified source code.
+ *
+ * @function buildShader
+ *
+ * @param {WebGL2RenderingContext} gl - The WebGL2 context.
+ * @param {string} source - The source code of the shader to build and compile.
+ * @param {number} type - The type of shader to build and compile (e.g. gl.VERTEX_SHADER or gl.FRAGMENT_SHADER).
+ *
+ * @returns {WebGLShader} The compiled shader.
+ */
 function buildShader(gl, source, type) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
@@ -14,7 +24,18 @@ function buildShader(gl, source, type) {
     }
 }
 
-// build and compile program
+
+/**
+ * Builds and compiles a rendering program from the specified vertex and fragment shaders.
+ *
+ * @function buildProgram
+ *
+ * @param {WebGL2RenderingContext} gl - The WebGL2 context.
+ * @param {WebGLShader} vertexShader - The compiled vertex shader to use.
+ * @param {WebGLShader} fragmentShader - The compiled fragment shader to use.
+ *
+ * @returns {WebGLProgram} The compiled rendering program.
+ */
 function buildProgram(gl, vertexShader, fragmentShader) {
     const program = gl.createProgram();
     gl.attachShader(program, vertexShader);
@@ -29,7 +50,18 @@ function buildProgram(gl, vertexShader, fragmentShader) {
     }
 }
 
-// build buffer
+
+/**
+ * Creates a buffer from the specified data.
+ *
+ * @function createBuffer
+ *
+ * @param {WebGL2RenderingContext} gl - The WebGL2 context.
+ * @param {TypedArray} data - The data to use for the buffer.
+ * @param {number} type - The type of buffer to create (e.g. gl.ARRAY_BUFFER or gl.ELEMENT_ARRAY_BUFFER).
+ *
+ * @returns {WebGLBuffer} The created buffer.
+ */
 function createBuffer(gl, data, type) {
     const buffer = gl.createBuffer();
     gl.bindBuffer(type, buffer);
@@ -37,7 +69,17 @@ function createBuffer(gl, data, type) {
     return buffer;
 }
 
-// load GLSL files into program
+
+/**
+ * Loads a GLSL file from the specified URL and returns its contents as a string.
+ *
+ * @async
+ * @function loadGLSLFile
+ *
+ * @param {string} url - The URL of the GLSL file to load.
+ *
+ * @returns {Promise<string>} A Promise that resolves with the contents of the GLSL file as a string.
+ */
 async function loadGLSLFile(url) {
     try {
       const response = await fetch(url);
@@ -50,9 +92,20 @@ async function loadGLSLFile(url) {
       console.error(`Error loading GLSL file: ${error}`);
       return null;
     }
-  }
+}
   
-// initialize shaders
+
+/**
+ * Sets up the WebGL2 context, builds and compiles a rendering program from the vertex and fragment shaders,
+ * and returns the compiled program.
+ *
+ * @async
+ * @function setup
+ *
+ * @param {WebGL2RenderingContext} gl - The WebGL2 context.
+ *
+ * @returns {Promise<WebGLProgram>} A Promise that resolves with the compiled rendering program.
+ */
 async function setup(gl) {
     const vertexShaderSource = await loadGLSLFile('./shaders/vertexShader.glsl');
     const fragmentShaderSource = await loadGLSLFile('./shaders/fragmentShader.glsl');

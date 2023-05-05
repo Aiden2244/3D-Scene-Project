@@ -1,6 +1,16 @@
 /* FUNCTIONS TO WORK WITH IMAGES AND TEXTURES */
 
-// generate a texture from an image
+/**
+ * Loads an image from the specified URL and creates a texture from it.
+ *
+ * @async
+ * @function loadImageAsTexture
+ *
+ * @param {WebGL2RenderingContext} gl - The WebGL2 context.
+ * @param {string} url - The URL of the image to load.
+ *
+ * @returns {Promise<WebGLTexture>} A Promise that resolves with the created texture.
+ */
 async function loadImageAsTexture(gl, url) {
     const image = await loadImage(url);
   
@@ -24,7 +34,15 @@ async function loadImageAsTexture(gl, url) {
 }
 
 
-// load a JS image object from a URL
+/**
+ * Loads an image object from the specified URL.
+ *
+ * @function loadImage
+ *
+ * @param {string} url - The URL of the image to load.
+ *
+ * @returns {Promise<JSImageObject>} A Promise that resolves with the loaded image object.
+ */
 function loadImage(url) {
     return new Promise((resolve, reject) => {
     const image = new Image();
