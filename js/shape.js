@@ -17,12 +17,15 @@ class shape {
         this.texture = null; // texture of the shape
 
         this.vertices = [];
-        this.indices = [];
+        this.normals = [];
         this.textureCoords = [];
+        this.indices = [];
+
 
         this.positionBuffer;
-        this.indexBuffer;
+        this.normalBuffer;
         this.textureCoordBuffer;
+        this.indexBuffer;
     }
 
     /* MODEL MATRIX FUNCTIONS */

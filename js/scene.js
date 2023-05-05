@@ -33,6 +33,10 @@ class scene {
         this.gl.enable(this.gl.CULL_FACE);
         this.gl.cullFace(this.gl.BACK);
         this.gl.frontFace(this.gl.CCW);
+
+        // enable depth test
+        this.gl.enable(this.gl.DEPTH_TEST);
+        this.gl.depthFunc(this.gl.LEQUAL);
     }
 
     initializeCamera() {

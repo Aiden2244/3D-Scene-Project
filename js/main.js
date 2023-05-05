@@ -46,13 +46,32 @@ async function myMain() {
 
     // create the crate
     const crate = new shape(gl, program);
-    // crate.translate([0, 0, -5]);
+    crate.translate([0, 5, 0]);
     crate.loadAttributes(ModelAttributeArray, 0);
     crate.loadMaterial(ModelMaterialsArray, ModelAttributeArray[0].materialIndex);
     crate.setTexture(crateTexture);
 
     // add crate to scene
     myScene.addObject(crate);
+
+
+    // oh boy let's load the plane in
+    await loadExternalJSON('./models/Airplane/airplane.json');
+
+    // load the plane texture
+    const planeTexture = await loadImageAsTexture(gl, "./models/Airplane/textures/diffuse.png");
+
+    // let's make a plane
+    const plane = new shape(gl, program);
+    plane.loadAttributes(ModelAttributeArray, 1);
+    plane.loadMaterial(ModelMaterialsArray, ModelAttributeArray[1].materialIndex);
+    plane.setTexture(planeTexture);
+    plane.scale([0.1, 0.1, 0.1]);
+    //plane.translate([0, -8, -10]);
+
+    // add plane to scene
+    myScene.addObject(plane);
+
 
     // animate
     myScene.animate();
