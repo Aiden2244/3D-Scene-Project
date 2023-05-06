@@ -8,20 +8,30 @@
  * @param {WebGLProgram} program - The rendering program.
  * @param {string} modelUrl - The URL of the 3D model.
  * @param {string} textureUrl - The URL of the texture.
+ * @param {string} normalTextureUrl - The URL of the normal texture.
  *
  * @returns {Promise<object>} A Promise that resolves with the rendered 3D model.
  */
-async function renderModel(gl, program, modelUrl, textureUrl) {
+async function renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl) {
     const ModelMaterialsArray = [];
     const ModelAttributeArray = [];
 
     await loadExternalJSON(modelUrl, ModelMaterialsArray, ModelAttributeArray);
 
-    const modelTexture = await loadImageAsTexture(gl, textureUrl);
+    
     const model = new shape(gl, program);
     model.loadAttributes(ModelAttributeArray, 0);
     model.loadMaterial(ModelMaterialsArray, ModelAttributeArray[0].materialIndex);
-    model.setTexture(modelTexture);
+    
+    if (textureUrl) {
+        const modelTexture = await loadImageAsTexture(gl, textureUrl);
+        model.setTexture(modelTexture);
+    }
+    
+    if (normalTextureUrl) {
+        const normalTexture = await loadImageAsTexture(gl, normalTextureUrl);
+        model.setNormalMap(normalTexture);
+    }
 
     return model;
 }

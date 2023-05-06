@@ -11,7 +11,9 @@ uniform vec3 u_specularMaterial;
 uniform float u_shininess;
 
 uniform sampler2D u_texture; // Add texture sampler
+uniform sampler2D u_normalMap; // Add normal map sampler
 uniform bool u_useTexture; // Add texture sampler
+uniform bool u_useNormalMap; // Add normal map sampler
 
 in vec3 v_normal;
 in vec3 v_lightRay;
@@ -20,6 +22,7 @@ in vec3 v_eyeVec;
 in vec4 v_color;
 
 in vec2 v_texCoord; // Add vertex attribute
+in vec2 v_normalMapCoord; // Add vertex attribute
 
 out vec4 fragColor;
 
@@ -27,6 +30,13 @@ out vec4 fragColor;
 void main() {
     vec3 L = normalize(v_lightRay);
     vec3 N = normalize(v_normal);
+
+    if (u_useNormalMap) {
+        vec3 normalMapColor = texture(u_normalMap, v_normalMapCoord).rgb;
+        normalMapColor = normalMapColor * 2.0 - 1.0;
+        N = normalize(N + normalMapColor);
+    }
+
     float lambertTerm = dot(N, -L);
 
     vec4 Ia = u_ambientLight * vec4(u_ambientMaterial, 1.0);

@@ -1,9 +1,8 @@
 /* SHAPE CLASS */
 class shape {
-    constructor(gl, program, name) {
+    constructor(gl, program) {
         this.gl = gl; // gl context
         this.program = program; // WebGL program
-        this.name = name;
 
         this.color = [1, 1, 1]; // default color of the shape
         this.lightingDirection = [0, 3, 0]; // default lighting direction
@@ -19,12 +18,14 @@ class shape {
         this.vertices = [];
         this.normals = [];
         this.textureCoords = [];
+        this.normalMapCoords = [];
         this.indices = [];
 
 
         this.positionBuffer;
         this.normalBuffer;
         this.textureCoordBuffer;
+        this.normalCoordBuffer;
         this.indexBuffer;
     }
 
@@ -55,6 +56,11 @@ class shape {
     /* TEXTURE FUNCTION */
     setTexture(texture) {
         this.texture = texture;
+    }
+
+    /* NORMAL MAP FUNCTION */
+    setNormalMap(normalMap) {
+        this.normalMap = normalMap;
     }
 
     /* OBJECT ATTRIBUTE FUNCTIONS */
@@ -145,6 +151,26 @@ class shape {
         this.gl.enableVertexAttribArray(textureCoordAttributeLocation);
     }
 
+    setupNormalMap() {
+        const useNormalMapLocation = this.gl.getUniformLocation(this.program, "u_useNormalMap");
+        if (this.normalMap == null) {
+            this.gl.uniform1i(useNormalMapLocation, 0);
+            return;
+        }
+        this.gl.uniform1i(useNormalMapLocation, 1);
+
+        this.gl.activeTexture(this.gl.TEXTURE1);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.normalMap);
+        const normalMapLocation = this.gl.getUniformLocation(this.program, "u_normalMap");
+        this.gl.uniform1i(normalMapLocation, 1);
+
+        const normalCoordAttributeLocation = this.gl.getAttribLocation(this.program, "a_normalCoord");
+        this.normalCoordBuffer = createBuffer(this.gl, new Float32Array(this.normalMapCoords), this.gl.ARRAY_BUFFER);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalCoordBuffer); // Add this line
+        this.gl.vertexAttribPointer(normalCoordAttributeLocation, 2, this.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(normalCoordAttributeLocation);
+    }
+
     /* DRAW FUNCTION */
     draw() {
 
@@ -156,6 +182,9 @@ class shape {
 
         // set up texture
         this.setupTexture();
+
+        // set up normal map
+        this.setupNormalMap();
 
         // draw
         const primitiveType = this.gl.TRIANGLES;
