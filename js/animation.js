@@ -91,4 +91,23 @@ function animateZScaling(shape, flag, factor) {
     shape.scale([1, 1, 1 + (factor * 0.01 * flag)]);
     
 }
+
+
+function animateObject(shape, time, target) {
+    shape.transformations.forEach(transformation => {
+        if (time == target) {
+            if (transformation.type === 'translation') {
+                shape.translate(transformation.value);
+            } else if (transformation.type === 'rotation') {
+                shape.rotate(transformation.value);
+            } else if (transformation.type === 'scaling') {
+                shape.scale(transformation.value);
+            } else if (Array.isArray(transformation) && transformation.length === 16) {
+                glMatrix.mat4.multiply(shape.modelMatrix, shape.modelMatrix, transformation);
+    
+            }
+        }
+    });
+}
 /******/
+

@@ -5,7 +5,6 @@ class shape {
         this.program = program; // WebGL program
 
         this.color = [1, 1, 1]; // default color of the shape
-        this.lightingDirection = [0, 3, 0]; // default lighting direction
         this.diffuseLight = [0.8, 0.8, 0.8]; // default diffuse light
         this.ambientLight = [0.2, 0.2, 0.2]; // default ambient light
         this.specularLight = [0.5, 0.5, 0.5]; // default specular light
@@ -14,6 +13,9 @@ class shape {
         this.modelMatrix = glMatrix.mat4.create(); // each shape has its own model matrix
 
         this.texture = null; // texture of the shape
+
+        this.transformations = []; // array to store the transformations of the shape
+        this.animationSpeed = 1.0;
 
         this.vertices = [];
         this.normals = [];
@@ -34,10 +36,11 @@ class shape {
         glMatrix.mat4.translate(this.modelMatrix, this.modelMatrix, translationVector);
     }
 
-    rotate(rotationVector) {
-        glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rotationVector[0], [1, 0, 0]);
-        glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rotationVector[1], [0, 1, 0]);
-        glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rotationVector[2], [0, 0, 1]);
+    rotate(rotationVector, rate) {
+        if (!rate) rate = 0.05;
+        glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[0], [1, 0, 0]);
+        glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[1], [0, 1, 0]);
+        glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[2], [0, 0, 1]);
     }
     
     scale(scaleFactor) {
@@ -117,13 +120,11 @@ class shape {
         this.gl.uniform3fv(u_color_location, this.color);
 
         // set up lighting
-        const u_lightingDirectionLocation = this.gl.getUniformLocation(this.program, "u_lightingDirection");
         const u_ambientMaterialLocation = this.gl.getUniformLocation(this.program, "u_ambientMaterial");
         const u_diffuseMaterialLocation = this.gl.getUniformLocation(this.program, "u_diffuseMaterial");
         const u_specularMaterialLocation = this.gl.getUniformLocation(this.program, "u_specularMaterial");
         const u_shininessLocation = this.gl.getUniformLocation(this.program, "u_shininess");
         
-        this.gl.uniform3fv(u_lightingDirectionLocation, this.lightingDirection);
         this.gl.uniform3fv(u_ambientMaterialLocation, this.ambientLight);
         this.gl.uniform3fv(u_diffuseMaterialLocation, this.diffuseLight);
         this.gl.uniform3fv(u_specularMaterialLocation, this.specularLight);
@@ -185,6 +186,9 @@ class shape {
 
         // set up normal map
         this.setupNormalMap();
+
+        // apply transformations
+        
 
         // draw
         const primitiveType = this.gl.TRIANGLES;

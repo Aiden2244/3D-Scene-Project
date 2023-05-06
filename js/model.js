@@ -9,10 +9,11 @@
  * @param {string} modelUrl - The URL of the 3D model.
  * @param {string} textureUrl - The URL of the texture.
  * @param {string} normalTextureUrl - The URL of the normal texture.
+ * @param {string} name - The name of the object transformation.
  *
  * @returns {Promise<object>} A Promise that resolves with the rendered 3D model.
  */
-async function renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl) {
+async function renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl, name) {
     const ModelMaterialsArray = [];
     const ModelAttributeArray = [];
 
@@ -31,6 +32,12 @@ async function renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl) 
     if (normalTextureUrl) {
         const normalTexture = await loadImageAsTexture(gl, normalTextureUrl);
         model.setNormalMap(normalTexture);
+    }
+
+    if (name) {
+        const objectJSON = await fetch(modelUrl).then(resp => resp.json());
+        model.transformations = extractTransformations(objectJSON, name);
+
     }
 
     return model;
@@ -135,3 +142,45 @@ function createMaterialsArray(obj2, ModelMaterialsArray) {
         ModelMaterialsArray.push(met);
     }
 }
+
+
+/**
+ * Extracts the transformations from a 3D model in JSON format and stores them in an array.
+ *
+ * @function extractTransformations
+ *
+ * @param {JSON} modelJson - The 3D model in JSON format.
+ * @param {string} objectName - The name of the object to extract the transformations for.
+ *
+ * @returns {Array} An array containing the extracted transformation data.
+ */
+function extractTransformations(modelJson, objectName) {
+
+    const transformations = [];
+
+    // Check if the rootnode and children property exists in the modelJson
+    if (!modelJson.hasOwnProperty('rootnode') || !modelJson.rootnode.hasOwnProperty('children')) {
+        console.error(`The 'children' property is not found in the JSON file.`);
+        return transformations;
+    }
+
+    // Search for the object node in the JSON
+    const objectNode = modelJson.rootnode.children.find(child => child.name === objectName);
+
+    if (!objectNode) {
+        console.error(`Object with name '${objectName}' not found in the JSON file.`);
+        return transformations;
+    }
+
+    // Directly push the content of the 'transformation' property
+    if (objectNode.hasOwnProperty('transformation')) {
+        transformations.push(objectNode.transformation);
+    } else {
+        console.error(`Transformation not found for object with name '${objectName}'.`);
+    }
+
+    return transformations;
+}
+    
+
+
