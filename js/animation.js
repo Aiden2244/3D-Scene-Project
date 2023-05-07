@@ -99,7 +99,7 @@ function animateObject(shape, time, target) {
             if (transformation.type === 'translation') {
                 shape.translate(transformation.value);
             } else if (transformation.type === 'rotation') {
-                shape.rotate(transformation.value, transformation.rate);
+                shape.rotate(transformation.axis, transformation.center, transformation.rate);
             } else if (transformation.type === 'scaling') {
                 shape.scale(transformation.value);
             } else if (Array.isArray(transformation) && transformation.length === 16) {

@@ -20,14 +20,23 @@ async function myMain() {
     crateObject.translate([0.0, 0.0, -10.0]);
     myScene.addObject(crateObject);
 
-    const planeModelLocation = './models/Airplane/airplane.json';
+    const planeModelLocation = './models/Airplane/airplaneBody.json';
     const planeTextureLocation = './models/Airplane/textures/diffuse.png';
     const planeNormalTextureLocation = './models/Airplane/textures/normal.png';
-    const planeObject = await renderModel(gl, program, planeModelLocation, planeTextureLocation, planeNormalTextureLocation, 'awionetka');
-    planeObject.translate([0.0, -0.95, -4.0]);
-    planeObject.rotate([0.0, -0.5, 0.0]);
+    const planeObject = await renderModel(gl, program, planeModelLocation, planeTextureLocation, planeNormalTextureLocation, null);
+    planeObject.translate([-2, 3, -8]);
+    planeObject.rotate([0, 0.5, 0])
     planeObject.scale([0.1, 0.1, 0.1]);
     myScene.addObject(planeObject);
+
+    const propellerModelLocation = './models/Airplane/propeller.json';
+    const propellerTextureLocation = './models/Airplane/textures/diffuse.png';
+    const propellerNormalTextureLocation = './models/Airplane/textures/normal.png';
+    const propellerObject = await renderModel(gl, program, propellerModelLocation, propellerTextureLocation, propellerNormalTextureLocation, 'propeller');
+    propellerObject.translate([-2, 3, -8]);
+    propellerObject.rotate([0, 0.5, 0])
+    propellerObject.scale([0.1, 0.1, 0.1]);
+    myScene.addObject(propellerObject);
 
     const floorModelLocation = './models/cube.json';
     const floorObject = await renderModel(gl, program, floorModelLocation);

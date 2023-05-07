@@ -34,12 +34,41 @@ class shape {
         glMatrix.mat4.translate(this.modelMatrix, this.modelMatrix, translationVector);
     }
 
-    rotate(rotationVector, rate) {
+    rotate(rotationVector, center, rate) {
         if (!rate) rate = 1;
-        glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[0], [1, 0, 0]);
-        glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[1], [0, 1, 0]);
-        glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[2], [0, 0, 1]);
-    }
+        if (!center) center = [0, 0, 0];
+      
+        // Translate the object to the origin using the negative center
+        glMatrix.mat4.translate(this.modelMatrix, this.modelMatrix, [
+          -center[0],
+          -center[1],
+          -center[2],
+        ]);
+      
+        // Perform the rotation about the desired axes
+        glMatrix.mat4.rotate(
+          this.modelMatrix,
+          this.modelMatrix,
+          rate * rotationVector[0],
+          [1, 0, 0]
+        );
+        glMatrix.mat4.rotate(
+          this.modelMatrix,
+          this.modelMatrix,
+          rate * rotationVector[1],
+          [0, 1, 0]
+        );
+        glMatrix.mat4.rotate(
+          this.modelMatrix,
+          this.modelMatrix,
+          rate * rotationVector[2],
+          [0, 0, 1]
+        );
+      
+        // Translate the object back to its original position using center
+        glMatrix.mat4.translate(this.modelMatrix, this.modelMatrix, center);
+      }
+      
     
     scale(scaleFactor) {
         glMatrix.mat4.scale(this.modelMatrix, this.modelMatrix, scaleFactor);
