@@ -13,20 +13,19 @@ class shape {
         this.modelMatrix = glMatrix.mat4.create(); // each shape has its own model matrix
 
         this.texture = null; // texture of the shape
+        this.normalMap = null; // normal map of the shape
 
         this.transformations = []; // array to store the transformations of the shape
 
         this.vertices = [];
         this.normals = [];
         this.textureCoords = [];
-        this.normalMapCoords = [];
         this.indices = [];
 
 
         this.positionBuffer;
         this.normalBuffer;
         this.textureCoordBuffer;
-        this.normalCoordBuffer;
         this.indexBuffer;
     }
 
@@ -35,7 +34,8 @@ class shape {
         glMatrix.mat4.translate(this.modelMatrix, this.modelMatrix, translationVector);
     }
 
-    rotate(rotationVector, rate=0.01) {
+    rotate(rotationVector, rate) {
+        if (!rate) rate = 1;
         glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[0], [1, 0, 0]);
         glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[1], [0, 1, 0]);
         glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[2], [0, 0, 1]);
@@ -164,7 +164,7 @@ class shape {
         this.gl.uniform1i(normalMapLocation, 1);
 
         const normalCoordAttributeLocation = this.gl.getAttribLocation(this.program, "a_normalCoord");
-        this.normalCoordBuffer = createBuffer(this.gl, new Float32Array(this.normalMapCoords), this.gl.ARRAY_BUFFER);
+        this.normalCoordBuffer = createBuffer(this.gl, new Float32Array(this.textureCoords), this.gl.ARRAY_BUFFER);
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalCoordBuffer); // Add this line
         this.gl.vertexAttribPointer(normalCoordAttributeLocation, 2, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(normalCoordAttributeLocation);
