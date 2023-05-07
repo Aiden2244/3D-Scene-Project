@@ -75,7 +75,7 @@ class scene {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); // clear the canvas
         
         
-        const cycle_time = 10;
+        const cycle_time = 1;
     
         /* DRAW EVERY SHAPE*/
         for (let i = 0; i < this.objects.length; i++) {

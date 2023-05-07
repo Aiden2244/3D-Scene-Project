@@ -15,7 +15,6 @@ class shape {
         this.texture = null; // texture of the shape
 
         this.transformations = []; // array to store the transformations of the shape
-        this.animationSpeed = 1.0;
 
         this.vertices = [];
         this.normals = [];
@@ -36,8 +35,7 @@ class shape {
         glMatrix.mat4.translate(this.modelMatrix, this.modelMatrix, translationVector);
     }
 
-    rotate(rotationVector, rate) {
-        if (!rate) rate = 0.05;
+    rotate(rotationVector, rate=0.01) {
         glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[0], [1, 0, 0]);
         glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[1], [0, 1, 0]);
         glMatrix.mat4.rotate(this.modelMatrix, this.modelMatrix, rate * rotationVector[2], [0, 0, 1]);
@@ -186,9 +184,6 @@ class shape {
 
         // set up normal map
         this.setupNormalMap();
-
-        // apply transformations
-        
 
         // draw
         const primitiveType = this.gl.TRIANGLES;

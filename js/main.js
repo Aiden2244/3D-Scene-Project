@@ -18,12 +18,12 @@ async function myMain() {
     const crateTextureLocation = './models/crate/texture/simple_crate_tex.jpg';
     const crateObject = await renderModel(gl, program, crateModelLocation, crateTextureLocation);
     crateObject.translate([0.0, 0.0, -10.0]);
-    // myScene.addObject(crateObject);
+    myScene.addObject(crateObject);
 
     const planeModelLocation = './models/Airplane/airplane.json';
     const planeTextureLocation = './models/Airplane/textures/diffuse.png';
     const planeNormalTextureLocation = './models/Airplane/textures/normal.png';
-    const planeObject = await renderModel(gl, program, planeModelLocation, planeTextureLocation, planeNormalTextureLocation);
+    const planeObject = await renderModel(gl, program, planeModelLocation, planeTextureLocation, planeNormalTextureLocation, null);
     planeObject.translate([0.0, -0.95, -4.0]);
     planeObject.rotate([0.0, 0.5, 0.0]);
     planeObject.scale([0.1, 0.1, 0.1]);
@@ -34,7 +34,7 @@ async function myMain() {
     floorObject.translate([0.0, -1.0, 0.0]);
     floorObject.scale([1000, 0.1, 1000]);
     floorObject.setColor([0.0, 1.0, 0.0]);
-    // myScene.addObject(floorObject);
+    myScene.addObject(floorObject);
 
     const cubeModelLocation = floorModelLocation;
     const cubeObject = await renderModel(gl, program, cubeModelLocation, null, null, 'CubeMesh');
