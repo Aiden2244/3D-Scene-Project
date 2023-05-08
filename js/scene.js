@@ -16,7 +16,7 @@ class scene {
         this.ambientLight = [0.2, 0.2, 0.2, 1.0];
         this.diffuseLight = [0.8, 0.8, 0.8, 1.0];
         this.specularLight = [0.5, 0.5, 0.5, 1.0];
-        this.lightingDirection = [0, 0, 0]; // default lighting direction
+        this.lightingDirection = [0, 100, 0]; // default lighting direction
         
         this.initializeCanvas();
         this.initializeCamera();

@@ -71,10 +71,11 @@ async function myMain() {
     // reflective box
     const cubeModelLocation = floorModelLocation;
     const cubeObject = await renderModel(gl, program, cubeModelLocation, null, null, ['CubeMesh', 'CubeMesh2']);
-    cubeObject.translate([5.0, 0.0, -5.0]);
+    cubeObject.translate([5.0, 1.0, 7.0]);
     cubeObject.rotate([0, 0, Math.PI]);  
     myScene.addObject(cubeObject);
 
+    // flag
     const flagModelLocation = './models/Flagpole/flag.json';
     const flagTextureLocation = './models/Flagpole/textures/red.jpg';
     const flagObject = await renderModel(gl, program, flagModelLocation, flagTextureLocation, null, ['flag']);
@@ -83,6 +84,7 @@ async function myMain() {
     flagObject.scale([0.5, 0.5, 0.5]);
     myScene.addObject(flagObject);
 
+    // flag pole
     const flagPoleModelLocation = './models/Flagpole/pole.json';
     const flagPoleTextureLocation = './models/Flagpole/textures/WOOD05L2.jpg';
     const flagPoleObject = await renderModel(gl, program, flagPoleModelLocation, flagPoleTextureLocation, null, ['pole']);
@@ -91,7 +93,14 @@ async function myMain() {
     flagPoleObject.scale([0.5, 0.5, 0.5]);
     myScene.addObject(flagPoleObject);
 
-
+    // house
+    const houseModelLocation = './models/House/house.json';
+    const houseTextureLocation = flagPoleTextureLocation;
+    const houseObject = await renderModel(gl, program, houseModelLocation, houseTextureLocation, null, null);
+    houseObject.translate([-5, -1.0, 25]);
+    houseObject.rotate([0, -1, 0]);
+    houseObject.scale([1.5, 1.5, 1.5]);
+    myScene.addObject(houseObject);
 
     myScene.animate();
 }

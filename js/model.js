@@ -9,7 +9,7 @@
  * @param {string} modelUrl - The URL of the 3D model.
  * @param {string} textureUrl - The URL of the texture.
  * @param {string} normalTextureUrl - The URL of the normal texture.
- * @param {string} names - The name of the object transformation.
+ * @param {string[]} names - The list of names of the object transformations.
  *
  * @returns {Promise<object>} A Promise that resolves with the rendered 3D model.
  */
@@ -45,26 +45,6 @@ async function renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl, 
 
     return model;
 }
-
-async function renderAllModels(gl, program, modelUrl, textureUrl, normalTextureUrl, name) {
-    const ModelMaterialsArray = [];
-    const ModelAttributeArray = [];
-
-    await loadExternalJSON(modelUrl, ModelMaterialsArray, ModelAttributeArray);
-
-    const models = [];
-
-    for (let i = 0; i < ModelAttributeArray.length; i++) {
-        const model = await renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl, name);
-        model.loadAttributes(ModelAttributeArray, i);
-        model.loadMaterial(ModelMaterialsArray, ModelAttributeArray[i].materialIndex);
-        models.push(model);
-    }
-
-    return models;
-}
-
-
 
 /**
  * Loads an external JSON file and stores its data in the specified arrays.

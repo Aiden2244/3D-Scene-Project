@@ -119,7 +119,7 @@ class shape {
         this.diffuseLight = diffuseLight;
         this.specularLight = specularLight;
         this.shininess = shininess;
-        
+
     }
 
     /* PREPARE OBJECT FOR DRAWING */
@@ -214,7 +214,6 @@ class shape {
 
     /* DRAW FUNCTION */
     draw() {
-
         // set up vertex attributes
         this.setObjectAttributes();
 
