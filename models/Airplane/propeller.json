@@ -28,8 +28,8 @@
 				 "name": "propeller"
 				,"transformation": {
 					"type": "rotation",
-					"axis": [0, 0, 1],
-					"rate": 0.1,
+					"value": [0, 0, 1],
+					"rate": 0.2,
 					"center": [0, 0, 0]
 				}
 				,"meshes": [

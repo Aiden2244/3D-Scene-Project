@@ -3,7 +3,7 @@ class camera {
         this.gl = gl;
         this.program = program;
 
-        this.position = [0, 0, 5]
+        this.position = [-20, 0, 30]
         this.lookAtPoint = [0, 0, 0];
         this.upVector = [0, 1, 0];
 
@@ -46,7 +46,7 @@ class camera {
 
 
     strafe(direction) {
-        const strafeIncrement = 0.05 * direction;
+        const strafeIncrement = 0.01 * direction;
 
         // shift the camera's position to the left or right
         const strafeVector = glMatrix.vec3.create(); // the vector to store the translation
@@ -65,7 +65,7 @@ class camera {
 
     pushIn(direction) {
         // shift the camera's position forward or backward
-        const pushIncrement = 0.05 * direction;
+        const pushIncrement = 0.01 * direction;
 
         // Compute the look direction vector
         const lookDirection = this.calculateLookDirection();
@@ -82,7 +82,7 @@ class camera {
 
     pedestal(direction) {
 
-        const pedestalIncrement = 0.05 * direction;
+        const pedestalIncrement = 0.25 * direction;
 
         // shift the camera's position up or down
         glMatrix.vec3.scaleAndAdd(this.position, this.position, this.upVector, pedestalIncrement);
@@ -100,7 +100,7 @@ class camera {
     }
 
     reset() {
-        this.position = [0, 0, 5];
+        this.position = [-20, 0, 30];
         this.lookAtPoint = [0, 0, 0];
         this.updateCamera();
     }

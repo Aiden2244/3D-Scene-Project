@@ -8,8 +8,16 @@
                 "transformation": {
                     "type": "rotation",
                     "rate": 0.01,
-                    "axis": [0, 1, 0],
+                    "value": [0, 1, 0],
                     "center": [0, 0, 0]
+                }
+            },
+            {
+                "name": "CubeMesh2",
+                "meshes": [0],
+                "transformation": {
+                    "type": "scaling",
+                    "value": [1.001, 1.001, 1.001]
                 }
             }
         ]

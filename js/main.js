@@ -16,15 +16,15 @@ async function myMain() {
 
     const crateModelLocation = './models/crate/crate.json';
     const crateTextureLocation = './models/crate/texture/simple_crate_tex.jpg';
-    const crateObject = await renderModel(gl, program, crateModelLocation, crateTextureLocation, null, null);
-    crateObject.translate([0.0, 0.0, -10.0]);
+    const crateObject = await renderModel(gl, program, crateModelLocation, crateTextureLocation, null, ['crate1', 'crate2', 'crate3']);
+    crateObject.translate([-3.0, 1.0, 3.0]);
     myScene.addObject(crateObject);
 
     const planeModelLocation = './models/Airplane/airplaneBody.json';
     const planeTextureLocation = './models/Airplane/textures/diffuse.png';
     const planeNormalTextureLocation = './models/Airplane/textures/normal.png';
-    const planeObject = await renderModel(gl, program, planeModelLocation, planeTextureLocation, planeNormalTextureLocation, null);
-    planeObject.translate([-2, 3, -8]);
+    const planeObject = await renderModel(gl, program, planeModelLocation, planeTextureLocation, planeNormalTextureLocation, ['plane']);
+    planeObject.translate([-2, 6, -8]);
     planeObject.rotate([0, 0.5, 0])
     planeObject.scale([0.1, 0.1, 0.1]);
     myScene.addObject(planeObject);
@@ -32,23 +32,54 @@ async function myMain() {
     const propellerModelLocation = './models/Airplane/propeller.json';
     const propellerTextureLocation = './models/Airplane/textures/diffuse.png';
     const propellerNormalTextureLocation = './models/Airplane/textures/normal.png';
-    const propellerObject = await renderModel(gl, program, propellerModelLocation, propellerTextureLocation, propellerNormalTextureLocation, 'propeller');
-    propellerObject.translate([-2, 3, -8]);
+    const propellerObject = await renderModel(gl, program, propellerModelLocation, propellerTextureLocation, propellerNormalTextureLocation, ['propeller']);
+    propellerObject.translate([-2, 6, -8]);
     propellerObject.rotate([0, 0.5, 0])
     propellerObject.scale([0.1, 0.1, 0.1]);
     myScene.addObject(propellerObject);
 
+    const turbineModelLocation = './models/Turbine/turbine_body.json';
+    const turbineObject = await renderModel(gl, program, turbineModelLocation, null, null, null);
+    turbineObject.translate([7.0, 6.0, -12.0]);
+    turbineObject.rotate([0, 0.5, 0])
+    myScene.addObject(turbineObject);
+
+    turbineHeadModelLocation = './models/Turbine/turbine_head.json';
+    const turbineHeadObject = await renderModel(gl, program, turbineHeadModelLocation, null, null, ['fan']);
+    turbineHeadObject.translate([7.0, 6.0, -12.0]);
+    turbineHeadObject.rotate([0, 0.5, 0])
+    myScene.addObject(turbineHeadObject);
+
     const floorModelLocation = './models/cube.json';
-    const floorObject = await renderModel(gl, program, floorModelLocation);
+    const floorObject = await renderModel(gl, program, floorModelLocation, null, null, null);
     floorObject.translate([0.0, -1.0, 0.0]);
+    floorObject.rotate([0, 0, 0]);
     floorObject.scale([1000, 0.1, 1000]);
-    floorObject.setColor([0.0, 1.0, 0.0]);
+    floorObject.setColor([1.0, 1.0, 1.0]);
+    floorObject.setMaterialProperties([1.0, 1.0, 1.0], [0.0, 1.0, 0.0], null, 0);
     myScene.addObject(floorObject);
 
     const cubeModelLocation = floorModelLocation;
-    const cubeObject = await renderModel(gl, program, cubeModelLocation, null, null, 'CubeMesh');
+    const cubeObject = await renderModel(gl, program, cubeModelLocation, null, null, ['CubeMesh', 'CubeMesh2']);
     cubeObject.translate([5.0, 0.0, -5.0]);  
     myScene.addObject(cubeObject);
+
+    const flagModelLocation = './models/Flagpole/flag.json';
+    const flagTextureLocation = './models/Flagpole/textures/red.jpg';
+    const flagObject = await renderModel(gl, program, flagModelLocation, flagTextureLocation, null, ['flag']);
+    flagObject.translate([4.0, 4.0, -25.0]);
+    flagObject.rotate([0, 0, 0]);
+    flagObject.scale([0.5, 0.5, 0.5]);
+    myScene.addObject(flagObject);
+
+    const flagPoleModelLocation = './models/Flagpole/pole.json';
+    const flagPoleTextureLocation = './models/Flagpole/textures/WOOD05L2.jpg';
+    const flagPoleObject = await renderModel(gl, program, flagPoleModelLocation, flagPoleTextureLocation, null, ['pole']);
+    flagPoleObject.translate([4.0, -2, -25.0]);
+    flagPoleObject.rotate([0, 0, 0]);
+    flagPoleObject.scale([0.5, 0.5, 0.5]);
+    myScene.addObject(flagPoleObject);
+
 
 
     myScene.animate();

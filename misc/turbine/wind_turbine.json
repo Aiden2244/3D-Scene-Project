@@ -170,24 +170,12 @@
 			}
 			,{
 				 "name": "head"
-				,"transformation": [
-					 1
-					,0
-					,0
-					,0
-					,0
-					,1
-					,0
-					,0
-					,0
-					,0
-					,1
-					,0
-					,0
-					,0
-					,0
-					,1
-				]
+				,"transformation": {
+					"type": "rotation",
+					"axis": [0, 0, 1],
+					"rate": 0.05,
+					"center": [0, 0, 0]
+				}
 				,"meshes": [
 					 6
 				]

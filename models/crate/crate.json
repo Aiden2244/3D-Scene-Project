@@ -22,28 +22,50 @@
 		,"children": [
 			{
 				 "name": "crate1"
-				,"transformation": [
-					 1
-					,0
-					,0
-					,0
-					,0
-					,1
-					,0
-					,0
-					,0
-					,0
-					,1
-					,0
-					,0
-					,0
-					,0
-					,1
+				,"transformation": {
+					"type": "translation",
+					"value": [
+						 0.001
+						,-0.001
+						,0
+					]
+				}
+				,"meshes": [
+					 0
 				]
+			},
+			{
+				"name": "crate2"
+				,"transformation": {
+					"type": "rotation",
+					"value": [
+						 0.01
+						,0.01
+						,0
+					],
+					"rate": 1,
+					"center": [0, 0, 0]
+				}
+				,"meshes": [
+					 0
+				]
+			},
+			{
+				
+				"name": "crate3"
+				,"transformation": {
+					"type": "scaling",
+					"value": [
+						 1.002
+						,1.002
+						,1.002
+					]
+				}
 				,"meshes": [
 					 0
 				]
 			}
+			
 		]
 	}
 	,"flags": 8

@@ -109,6 +109,19 @@ class shape {
         this.shininess = ModelMaterialsArray[index].shininess;
     }
 
+    setMaterialProperties(ambientLight, diffuseLight, specularLight, shininess) {
+        if (!ambientLight) ambientLight = [0.2, 0.2, 0.2];
+        if (!diffuseLight) diffuseLight = [0.8, 0.8, 0.8];
+        if (!specularLight) specularLight = [0.5, 0.5, 0.5];
+        if (!shininess) shininess = 72;
+
+        this.ambientLight = ambientLight;
+        this.diffuseLight = diffuseLight;
+        this.specularLight = specularLight;
+        this.shininess = shininess;
+        
+    }
+
     /* PREPARE OBJECT FOR DRAWING */
     setObjectAttributes() {
         // vars for vertex attributes

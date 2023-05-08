@@ -16,7 +16,7 @@ class scene {
         this.ambientLight = [0.2, 0.2, 0.2, 1.0];
         this.diffuseLight = [0.8, 0.8, 0.8, 1.0];
         this.specularLight = [0.5, 0.5, 0.5, 1.0];
-        this.lightingDirection = [3, 10, 3]; // default lighting direction
+        this.lightingDirection = [0, 0, 0]; // default lighting direction
         
         this.initializeCanvas();
         this.initializeCamera();
@@ -75,12 +75,12 @@ class scene {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); // clear the canvas
         
         
-        const cycle_time = 1;
+        const cycle_time = 500;
     
         /* DRAW EVERY SHAPE*/
         for (let i = 0; i < this.objects.length; i++) {
             this.objects[i].draw();
-            animateObject(this.objects[i], this.clock, cycle_time);
+            animateObject(this.objects[i], this.clock, cycle_time / 2);
         }
         /******/
     

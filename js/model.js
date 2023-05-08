@@ -9,11 +9,11 @@
  * @param {string} modelUrl - The URL of the 3D model.
  * @param {string} textureUrl - The URL of the texture.
  * @param {string} normalTextureUrl - The URL of the normal texture.
- * @param {string} name - The name of the object transformation.
+ * @param {string} names - The name of the object transformation.
  *
  * @returns {Promise<object>} A Promise that resolves with the rendered 3D model.
  */
-async function renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl, name) {
+async function renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl, names) {
     const ModelMaterialsArray = [];
     const ModelAttributeArray = [];
 
@@ -34,14 +34,36 @@ async function renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl, 
         model.setNormalMap(normalTexture);
     }
 
-    if (name) {
+    if (names) {
         const objectJSON = await fetch(modelUrl).then(resp => resp.json());
-        model.transformations = extractTransformations(objectJSON, name);
+        for (let i = 0; i < names.length; i++) {
+            model.transformations = extractTransformations(objectJSON, names);
+            console.log(model.transformations)
+        }
 
     }
 
     return model;
 }
+
+async function renderAllModels(gl, program, modelUrl, textureUrl, normalTextureUrl, name) {
+    const ModelMaterialsArray = [];
+    const ModelAttributeArray = [];
+
+    await loadExternalJSON(modelUrl, ModelMaterialsArray, ModelAttributeArray);
+
+    const models = [];
+
+    for (let i = 0; i < ModelAttributeArray.length; i++) {
+        const model = await renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl, name);
+        model.loadAttributes(ModelAttributeArray, i);
+        model.loadMaterial(ModelMaterialsArray, ModelAttributeArray[i].materialIndex);
+        models.push(model);
+    }
+
+    return models;
+}
+
 
 
 /**
@@ -154,7 +176,7 @@ function createMaterialsArray(obj2, ModelMaterialsArray) {
  *
  * @returns {Array} An array containing the extracted transformation data.
  */
-function extractTransformations(modelJson, objectName) {
+function extractTransformations(modelJson, objectNames) {
 
     const transformations = [];
 
@@ -164,19 +186,21 @@ function extractTransformations(modelJson, objectName) {
         return transformations;
     }
 
-    // Search for the object node in the JSON
-    const objectNode = modelJson.rootnode.children.find(child => child.name === objectName);
+    for (let i = 0; i < objectNames.length; i++) {
+        // Search for the object node in the JSON
+        const objectNode = modelJson.rootnode.children.find(child => child.name === objectNames[i]);
 
-    if (!objectNode) {
-        console.error(`Object with name '${objectName}' not found in the JSON file.`);
-        return transformations;
-    }
+        if (!objectNode) {
+            console.error(`Object with name '${objectNames[i]}' not found in the JSON file.`);
+            return transformations;
+        }
 
-    // Directly push the content of the 'transformation' property
-    if (objectNode.hasOwnProperty('transformation')) {
-        transformations.push(objectNode.transformation);
-    } else {
-        console.error(`Transformation not found for object with name '${objectName}'.`);
+        // Directly push the content of the 'transformation' property
+        if (objectNode.hasOwnProperty('transformation')) {
+            transformations.push(objectNode.transformation);
+        } else {
+            console.error(`Transformation not found for object with name '${objectNames[i]}'.`);
+        }
     }
 
     return transformations;

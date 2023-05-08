@@ -25,25 +25,13 @@
 		]
 		,"children": [
 			{
-				 "name": "awionetka"
-				,"transformation": [
-					 1
-					,0
-					,0
-					,0
-					,0
-					,1
-					,0
-					,0
-					,0
-					,0
-					,1
-					,0
-					,0
-					,0
-					,0
-					,1
-				]
+				 "name": "plane"
+				,"transformation": {
+					"type": "rotation",
+					"value": [0, 0, -1],
+					"rate": 0.0025,
+					"center": [0, 0, 0]
+				}
 				,"meshes": [
 					 0
 				]

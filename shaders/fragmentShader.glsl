@@ -28,6 +28,7 @@ out vec4 fragColor;
 
 
 void main() {
+
     vec3 L = normalize(v_lightRay);
     vec3 N = normalize(v_normal);
 
@@ -47,7 +48,7 @@ void main() {
         Id = u_diffuseLight * vec4(u_diffuseMaterial, 1.0) * lambertTerm;
         vec3 E = normalize(v_eyeVec);
         vec3 R = reflect(L, N);
-        float specular = pow(max(dot(R, E), 0.0), u_shininess);
+        float specular = pow(max(dot(R, E), 0.0), u_shininess + 0.01);
         Is = u_specularLight * vec4(u_specularMaterial, 1.0) * specular;
     }
 
