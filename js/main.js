@@ -79,16 +79,16 @@ async function myMain() {
     const flagModelLocation = './models/Flagpole/flag.json';
     const flagTextureLocation = './models/Flagpole/textures/red.jpg';
     const flagObject = await renderModel(gl, program, flagModelLocation, flagTextureLocation, null, ['flag']);
-    flagObject.translate([4.0, 4.0, -25.0]);
-    flagObject.rotate([0, 0, 0]);
-    flagObject.scale([0.5, 0.5, 0.5]);
+    flagObject.translate([10, 6.0, 12.0]);
+    flagObject.rotate([0, -1, 0]);
+    flagObject.scale([0.4, 0.4, 0.4]);
     myScene.addObject(flagObject);
 
     // flag pole
     const flagPoleModelLocation = './models/Flagpole/pole.json';
     const flagPoleTextureLocation = './models/Flagpole/textures/WOOD05L2.jpg';
     const flagPoleObject = await renderModel(gl, program, flagPoleModelLocation, flagPoleTextureLocation, null, ['pole']);
-    flagPoleObject.translate([4.0, -2, -25.0]);
+    flagPoleObject.translate([10, -1, 12]);
     flagPoleObject.rotate([0, 0, 0]);
     flagPoleObject.scale([0.5, 0.5, 0.5]);
     myScene.addObject(flagPoleObject);
@@ -97,8 +97,8 @@ async function myMain() {
     const houseModelLocation = './models/House/house.json';
     const houseTextureLocation = flagPoleTextureLocation;
     const houseObject = await renderModel(gl, program, houseModelLocation, houseTextureLocation, null, null);
-    houseObject.translate([-5, -1.0, 25]);
-    houseObject.rotate([0, -1, 0]);
+    houseObject.translate([10, -1.0, 12]);
+    houseObject.rotate([0, -1.5, 0]);
     houseObject.scale([1.5, 1.5, 1.5]);
     myScene.addObject(houseObject);
 

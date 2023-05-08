@@ -3,7 +3,7 @@ class camera {
         this.gl = gl;
         this.program = program;
 
-        this.position = [-20, 0, 30]
+        this.position = [-12, 0, 21]
         this.lookAtPoint = [0, 0, 0];
         this.upVector = [0, 1, 0];
 
@@ -100,7 +100,7 @@ class camera {
     }
 
     reset() {
-        this.position = [-20, 0, 30];
+        this.position = [-12, 0, 21];
         this.lookAtPoint = [0, 0, 0];
         this.updateCamera();
     }
