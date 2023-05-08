@@ -68,7 +68,7 @@ async function myMain() {
     floorObject.rotate([0, 0, 0]);
     floorObject.scale([10000, 0.1, 10000]);
     floorObject.setColor([0.0, 1.0, 0.0]);
-    floorObject.setMaterialProperties([1.0, 1.0, 1.0], [0.0, 1.0, 0.0], [1.0, 1.0, 1.0], 240);
+    floorObject.setMaterialProperties([0.6, 0.6, 0.6], [0.0, 1.0, 0.0], [1.0, 1.0, 1.0], 240);
     myScene.addObject(floorObject);
 
     // reflective box
@@ -125,12 +125,6 @@ async function myMain() {
     stonehengeObject2.rotate([0, Math.sin(Math.PI/4) + Math.cos(Math.PI/4), 0]);
     stonehengeObject2.scale([0.5, 0.5, 0.5]);
     myScene.addObject(stonehengeObject2);
-
-    const stonehengeObject3 = await renderModel(gl, program, stonehengeModelLocation, stonehengeTextureLocation, blankNormalMap, null);
-    stonehengeObject3.translate([0.01*Math.sin(Math.PI/2), 0, 0.01*Math.cos(Math.PI/2)]);
-    stonehengeObject3.rotate([0, Math.sin(Math.PI/2) + Math.cos(Math.PI/2), 0]);
-    stonehengeObject3.scale([0.5, 0.5, 0.5]);
-    myScene.addObject(stonehengeObject3);
 
     const stonehengeObject4 = await renderModel(gl, program, stonehengeModelLocation, stonehengeTextureLocation, blankNormalMap, null);
     stonehengeObject4.translate([0.01*Math.sin(3*Math.PI/4), 0, 0.01*Math.cos(3*Math.PI/4)]);
