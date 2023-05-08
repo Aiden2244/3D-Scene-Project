@@ -1,40 +1,80 @@
 /* SHAPE CLASS */
+/**
+ * @class shape
+ * 
+ * @classdesc A shape represents a single object in the scene. It contains all the information 
+ * needed to render the object, including its model matrix, color, and texture.
+ *
+ */
 class shape {
+    /**
+     * The constructor for the shape class.
+     * @constructor
+     * 
+     * @param {WebGL2RenderingContext} gl - The WebGL2 context. 
+     * @param {WebGLProgram} program - The WebGL program. 
+     */
     constructor(gl, program) {
-        this.gl = gl; // gl context
-        this.program = program; // WebGL program
+        // pass values for the gl context and program
+        this.gl = gl; 
+        this.program = program; 
 
-        this.color = [1, 1, 1]; // default color of the shape
-        this.diffuseLight = [0.8, 0.8, 0.8]; // default diffuse light
-        this.ambientLight = [0.2, 0.2, 0.2]; // default ambient light
-        this.specularLight = [0.5, 0.5, 0.5]; // default specular light
-        this.shininess = 72; // default shininess
+        // set the default material values for the shape
+        this.color = [1, 1, 1]; 
+        this.diffuseLight = [0.8, 0.8, 0.8]; 
+        this.ambientLight = [0.2, 0.2, 0.2]; 
+        this.specularLight = [0.5, 0.5, 0.5];
+        this.shininess = 72; 
 
+        // create the shape's model matrix
         this.modelMatrix = glMatrix.mat4.create(); // each shape has its own model matrix
 
-        this.texture = null; // texture of the shape
-        this.normalMap = null; // normal map of the shape
+        // set the default values for the shape's texture and normal map
+        this.texture = null;
+        this.normalMap = null;
 
-        this.transformations = []; // array to store the transformations of the shape
+        // initialize the transformations array
+        this.transformations = [];
 
+        // initialize the shape's data arrays
         this.vertices = [];
         this.normals = [];
         this.textureCoords = [];
         this.indices = [];
 
-
+        // initialize the shape's buffers
         this.positionBuffer;
         this.normalBuffer;
         this.textureCoordBuffer;
         this.indexBuffer;
     }
+    /******/
 
     /* MODEL MATRIX FUNCTIONS */
+
+    /**
+     * Translates the shape by the given vector.
+     * @method translate
+     * 
+     * @param {vec3} translationVector - The vector by which to translate the shape.
+     * @returns {void}
+     */
     translate(translationVector) {
         glMatrix.mat4.translate(this.modelMatrix, this.modelMatrix, translationVector);
     }
 
+    /**
+     * Rotates the shape by the given vector.
+     * @method rotate
+     * 
+     * @param {vec3} rotationVector - The vector by which to rotate the shape.
+     * @param {vec3} center - The center of rotation for the shape.
+     * @param {float} rate - The rate at which to rotate the shape.
+     * 
+     * @returns {void}
+     */
     rotate(rotationVector, center, rate) {
+        // Set default values for center and rate
         if (!rate) rate = 1;
         if (!center) center = [0, 0, 0];
       
@@ -69,7 +109,13 @@ class shape {
         glMatrix.mat4.translate(this.modelMatrix, this.modelMatrix, center);
       }
       
-    
+    /**
+     * scales the shape by the given vector.
+     * @method scale
+     * 
+     * @param {vec3} scaleFactor - The vector by which to scale the shape.
+     * @returns {void}
+     */
     scale(scaleFactor) {
         glMatrix.mat4.scale(this.modelMatrix, this.modelMatrix, scaleFactor);
     }
@@ -77,23 +123,17 @@ class shape {
 
     
 
-    /* COLOR FUNCTION */
-    setColor(color) {
-        this.color = color;
-    }
-    /******/
+    /* ATTRIBUTE AND MATERIAL FUNCTIONS */
+    setColor(color) { this.color = color;}
+    setTexture(texture) { this.texture = texture; }
+    setNormalMap(normalMap) { this.normalMap = normalMap; }
 
-    /* TEXTURE FUNCTION */
-    setTexture(texture) {
-        this.texture = texture;
-    }
-
-    /* NORMAL MAP FUNCTION */
-    setNormalMap(normalMap) {
-        this.normalMap = normalMap;
-    }
-
-    /* OBJECT ATTRIBUTE FUNCTIONS */
+    /**
+     * load attributes from a JSON file
+     * @param {Array} ModelAttributeArray - array of JSON attribute properties
+     * @param {number} index - index of the JSON object to load
+     * @returns {void} 
+     */
     loadAttributes(ModelAttributeArray, index) {
         this.vertices = ModelAttributeArray[index].vertices;
         this.normals = ModelAttributeArray[index].normals;
@@ -101,7 +141,13 @@ class shape {
         this.indices = ModelAttributeArray[index].indices;
     }
 
-    /* OBJECT MATERIAL FUNCTIONS */
+    /**
+     * load material properties from a JSON file
+     * 
+     * @param {Array} ModelMaterialsArray - array of JSON material properties
+     * @param {number} index - index of the JSON object to load
+     * @returns {void}
+     */
     loadMaterial(ModelMaterialsArray, index) {
         this.ambientLight = ModelMaterialsArray[index].ambientm;
         this.diffuseLight = ModelMaterialsArray[index].diffusem;
@@ -109,6 +155,15 @@ class shape {
         this.shininess = ModelMaterialsArray[index].shininess;
     }
 
+    /** 
+     * set the material properties for the shape manually
+     * 
+     * @param {Array} ambientLight - the ambient light of the shape
+     * @param {Array} diffuseLight - the diffuse light of the shape
+     * @param {Array} specularLight - the specular light of the shape
+     * @param {number} shininess - the shininess of the shape
+     * @returns {void}
+     */
     setMaterialProperties(ambientLight, diffuseLight, specularLight, shininess) {
         if (!ambientLight) ambientLight = [0.2, 0.2, 0.2];
         if (!diffuseLight) diffuseLight = [0.8, 0.8, 0.8];
@@ -121,8 +176,16 @@ class shape {
         this.shininess = shininess;
 
     }
+    /******/
 
     /* PREPARE OBJECT FOR DRAWING */
+
+    /**
+     * Prepares the shape for drawing by setting up the index buffer and position/normal attributes.
+     * @method setObjectAttributes
+     * 
+     * @returns {void}
+     */
     setObjectAttributes() {
         // vars for vertex attributes
         const size = 3;
@@ -150,6 +213,12 @@ class shape {
         this.indexBuffer = createBuffer(this.gl, new Uint16Array(this.indices), this.gl.ELEMENT_ARRAY_BUFFER);
     }
 
+    /**
+     * Sets up the uniforms for the shape.
+     * @method setObjectUniforms
+     * 
+     * @returns {void}
+     */
     setObjectUniforms() {
         // set up model matrix
         const modelMatrix = this.modelMatrix;
@@ -171,20 +240,30 @@ class shape {
         this.gl.uniform1f(u_shininessLocation, this.shininess);
     }
 
+    /**
+     * Sets up the texture for the shape.
+     * @method setupTexture
+     * 
+     * @returns {void}
+     */
     setupTexture() {
-        // set up texture
+        // location of texture uniform
         const useTextureLocation = this.gl.getUniformLocation(this.program, "u_useTexture");
+
+        // if no texture, set uniform to false and return
         if (this.texture == null) {
             this.gl.uniform1i(useTextureLocation, 0);
             return;
         }
         this.gl.uniform1i(useTextureLocation, 1);
 
+        // set up texture
         this.gl.activeTexture(this.gl.TEXTURE0);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
         const textureLocation = this.gl.getUniformLocation(this.program, "u_texture");
         this.gl.uniform1i(textureLocation, 0);
 
+        // set up texture coordinates
         const textureCoordAttributeLocation = this.gl.getAttribLocation(this.program, "a_texCoord");
         this.textureCoordBuffer = createBuffer(this.gl, new Float32Array(this.textureCoords), this.gl.ARRAY_BUFFER);
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureCoordBuffer); // Add this line
@@ -192,7 +271,16 @@ class shape {
         this.gl.enableVertexAttribArray(textureCoordAttributeLocation);
     }
 
+    /**
+     * Sets up the normal map for the shape.
+     * @method setupNormalMap
+     * 
+     * @returns {void}
+     */
     setupNormalMap() {
+        // location of normal map uniform
+
+        // if no normal map, set uniform to false and return
         const useNormalMapLocation = this.gl.getUniformLocation(this.program, "u_useNormalMap");
         if (this.normalMap == null) {
             this.gl.uniform1i(useNormalMapLocation, 0);
@@ -200,19 +288,29 @@ class shape {
         }
         this.gl.uniform1i(useNormalMapLocation, 1);
 
+        // set up normal map
         this.gl.activeTexture(this.gl.TEXTURE1);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.normalMap);
         const normalMapLocation = this.gl.getUniformLocation(this.program, "u_normalMap");
         this.gl.uniform1i(normalMapLocation, 1);
 
+        // set up normal map coordinates
         const normalCoordAttributeLocation = this.gl.getAttribLocation(this.program, "a_normalCoord");
         this.normalCoordBuffer = createBuffer(this.gl, new Float32Array(this.textureCoords), this.gl.ARRAY_BUFFER);
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalCoordBuffer); // Add this line
         this.gl.vertexAttribPointer(normalCoordAttributeLocation, 2, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(normalCoordAttributeLocation);
     }
+    /******/
 
     /* DRAW FUNCTION */
+    
+    /**
+     * Draws the shape.
+     * @method draw
+     * 
+     * @returns {void}
+     */
     draw() {
         // set up vertex attributes
         this.setObjectAttributes();

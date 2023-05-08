@@ -64,15 +64,15 @@ async function myMain() {
     floorObject.translate([5.0, -1.0, 5.0]);
     floorObject.rotate([0, 0, 0]);
     floorObject.scale([10000, 0.1, 10000]);
-    floorObject.setColor([1.0, 1.0, 1.0]);
-    floorObject.setMaterialProperties([1.0, 1.0, 1.0], [0.0, 1.0, 0.0], null, 0);
+    floorObject.setColor([0.0, 1.0, 0.0]);
+    floorObject.setMaterialProperties([1.0, 1.0, 1.0], [0.0, 1.0, 0.0], [1.0, 1.0, 1.0], 240);
     myScene.addObject(floorObject);
 
     // reflective box
     const cubeModelLocation = floorModelLocation;
     const cubeObject = await renderModel(gl, program, cubeModelLocation, null, null, ['CubeMesh', 'CubeMesh2']);
-    cubeObject.translate([5.0, 1.0, 7.0]);
-    cubeObject.rotate([0, 0, Math.PI]);  
+    cubeObject.translate([4.0, 1.0, 6.0]);
+    cubeObject.setMaterialProperties([0.3, 0.3, 0.3], [0.8, 0.8, 0.0], [1.0, 1.0, 0.0], 8)
     myScene.addObject(cubeObject);
 
     // flag
@@ -84,12 +84,18 @@ async function myMain() {
     flagObject.scale([0.4, 0.4, 0.4]);
     myScene.addObject(flagObject);
 
+    const flagObject2 = await renderModel(gl, program, flagModelLocation, flagTextureLocation, null, ['flag']);
+    flagObject2.translate([10, 6.0, 12.0]);
+    flagObject2.rotate([0, -1.2, 0]);
+    flagObject2.scale([-0.4, 0.4, -0.4]);
+    myScene.addObject(flagObject2);
+
     // flag pole
     const flagPoleModelLocation = './models/Flagpole/pole.json';
     const flagPoleTextureLocation = './models/Flagpole/textures/WOOD05L2.jpg';
     const flagPoleObject = await renderModel(gl, program, flagPoleModelLocation, flagPoleTextureLocation, null, ['pole']);
-    flagPoleObject.translate([10, -1, 12]);
-    flagPoleObject.rotate([0, 0, 0]);
+    flagPoleObject.translate([10, 9.15, 12]);
+    flagPoleObject.rotate([Math.PI, 0, 0]);
     flagPoleObject.scale([0.5, 0.5, 0.5]);
     myScene.addObject(flagPoleObject);
 
@@ -102,6 +108,46 @@ async function myMain() {
     houseObject.scale([1.5, 1.5, 1.5]);
     myScene.addObject(houseObject);
 
+    // stonehenge
+    const stonehengeModelLocation = './models/Stonehenge/stonehenge.json';
+    const stonehengeTextureLocation = './models/Stonehenge/rock.png';
+    const stonehengeObject1 = await renderModel(gl, program, stonehengeModelLocation, stonehengeTextureLocation, null, null);
+    stonehengeObject1.translate([0.01*Math.sin(0), 0, 0.01*Math.cos(0)]);
+    stonehengeObject1.rotate([0, Math.sin(0) + Math.cos(0), 0]);
+    stonehengeObject1.scale([0.5, 0.5, 0.5]);
+    myScene.addObject(stonehengeObject1);
+
+    const stonehengeObject2 = await renderModel(gl, program, stonehengeModelLocation, stonehengeTextureLocation, null, null);
+    stonehengeObject2.translate([0.01*Math.sin(Math.PI/4), 0, 0.01*Math.cos(Math.PI/4)]);
+    stonehengeObject2.rotate([0, Math.sin(Math.PI/4) + Math.cos(Math.PI/4), 0]);
+    stonehengeObject2.scale([0.5, 0.5, 0.5]);
+    myScene.addObject(stonehengeObject2);
+
+    const stonehengeObject3 = await renderModel(gl, program, stonehengeModelLocation, stonehengeTextureLocation, null, null);
+    stonehengeObject3.translate([0.01*Math.sin(Math.PI/2), 0, 0.01*Math.cos(Math.PI/2)]);
+    stonehengeObject3.rotate([0, Math.sin(Math.PI/2) + Math.cos(Math.PI/2), 0]);
+    stonehengeObject3.scale([0.5, 0.5, 0.5]);
+    myScene.addObject(stonehengeObject3);
+
+    const stonehengeObject4 = await renderModel(gl, program, stonehengeModelLocation, stonehengeTextureLocation, null, null);
+    stonehengeObject4.translate([0.01*Math.sin(3*Math.PI/4), 0, 0.01*Math.cos(3*Math.PI/4)]);
+    stonehengeObject4.rotate([0, Math.sin(3*Math.PI/4) + Math.cos(3*Math.PI/4), 0]);
+    stonehengeObject4.scale([0.5, 0.5, 0.5]);
+    myScene.addObject(stonehengeObject4);
+
+    const stonehengeObject5 = await renderModel(gl, program, stonehengeModelLocation, stonehengeTextureLocation, null, null);
+    stonehengeObject5.translate([0.01*Math.sin(Math.PI), 0, 0.01*Math.cos(Math.PI)]);
+    stonehengeObject5.rotate([0, Math.sin(Math.PI) + Math.cos(Math.PI), 0]);
+    stonehengeObject5.scale([0.5, 0.5, 0.5]);
+    myScene.addObject(stonehengeObject5);
+
+    const stonehengeObject6 = await renderModel(gl, program, stonehengeModelLocation, stonehengeTextureLocation, null, null);
+    stonehengeObject6.translate([0.01*Math.sin(5*Math.PI/4), 0, 0.01*Math.cos(5*Math.PI/4)]);
+    stonehengeObject6.rotate([0, Math.sin(5*Math.PI/4) + Math.cos(5*Math.PI/4), 0]);
+    stonehengeObject6.scale([0.5, 0.5, 0.5]);
+    myScene.addObject(stonehengeObject6);
+
+    // animate the scene
     myScene.animate();
 }
 

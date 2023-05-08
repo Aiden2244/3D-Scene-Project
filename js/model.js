@@ -14,33 +14,34 @@
  * @returns {Promise<object>} A Promise that resolves with the rendered 3D model.
  */
 async function renderModel(gl, program, modelUrl, textureUrl, normalTextureUrl, names) {
+    // initialize arrays to store the model data
     const ModelMaterialsArray = [];
     const ModelAttributeArray = [];
 
+    // load the model data from the external JSON file
     await loadExternalJSON(modelUrl, ModelMaterialsArray, ModelAttributeArray);
 
-    
+    // create a new shape object and load the model data into it
     const model = new shape(gl, program);
     model.loadAttributes(ModelAttributeArray, 0);
     model.loadMaterial(ModelMaterialsArray, ModelAttributeArray[0].materialIndex);
     
+    // load the texture and normal texture
     if (textureUrl) {
         const modelTexture = await loadImageAsTexture(gl, textureUrl);
         model.setTexture(modelTexture);
     }
-    
     if (normalTextureUrl) {
         const normalTexture = await loadImageAsTexture(gl, normalTextureUrl);
         model.setNormalMap(normalTexture);
     }
 
+    // load the transformations
     if (names) {
         const objectJSON = await fetch(modelUrl).then(resp => resp.json());
         for (let i = 0; i < names.length; i++) {
             model.transformations = extractTransformations(objectJSON, names);
-            console.log(model.transformations)
         }
-
     }
 
     return model;
@@ -88,14 +89,13 @@ function loadExternalJSON(url, ModelMaterialsArray, ModelAttributeArray) {
  * @param {Array} ModelAttributeArray - An array to store the extracted attributes data.
  */
 function createModelAttributeArray(obj2, ModelAttributeArray) {
-    console.log('In createModelAttributeArray...');
-    console.log(obj2.meshes.length);
-
     let numMeshIndexs = obj2.meshes.length;
-    let idx = 0;
-    for (idx = 0; idx < numMeshIndexs; idx++) {
+
+    // Loop through all the meshes in the model
+    for (let idx = 0; idx < numMeshIndexs; idx++) {
         let modelObj = {};
 
+        // Extract the vertices, normals, texture coordinates, indices, and material index from the mesh
         modelObj.vertices = obj2.meshes[idx].vertices;
         modelObj.normals = obj2.meshes[idx].normals;
 
@@ -119,15 +119,13 @@ function createModelAttributeArray(obj2, ModelAttributeArray) {
  * @param {Array} ModelMaterialsArray - An array to store the extracted materials data.
  */
 function createMaterialsArray(obj2, ModelMaterialsArray) {
-    console.log('In createMaterialsArray...');
-    console.log(obj2.materials.length);
-
     let itr = obj2.materials.length;
-    let idx = 0;
 
-    for (idx = 0; idx < itr; idx++) {
+    // Loop through all the materials in the model
+    for (let idx = 0; idx < itr; idx++) {
         let met = {};
 
+        // Extract the material properties from the material
         let materialProperties = obj2.materials[idx].properties;
         let materialPropsObj = {};
 
@@ -135,6 +133,7 @@ function createMaterialsArray(obj2, ModelMaterialsArray) {
             materialPropsObj[prop.key] = prop.value;
         });
 
+        // Store the material properties in the met object
         met.shadingm = materialPropsObj["$mat.shadingm"];
         met.ambientm = materialPropsObj["$clr.ambient"];
         met.diffusem = materialPropsObj["$clr.diffuse"];
@@ -157,7 +156,7 @@ function createMaterialsArray(obj2, ModelMaterialsArray) {
  * @returns {Array} An array containing the extracted transformation data.
  */
 function extractTransformations(modelJson, objectNames) {
-
+    // Initialize the array to store the transformations
     const transformations = [];
 
     // Check if the rootnode and children property exists in the modelJson
@@ -166,6 +165,7 @@ function extractTransformations(modelJson, objectNames) {
         return transformations;
     }
 
+    // Loop through all the object names
     for (let i = 0; i < objectNames.length; i++) {
         // Search for the object node in the JSON
         const objectNode = modelJson.rootnode.children.find(child => child.name === objectNames[i]);
@@ -185,6 +185,3 @@ function extractTransformations(modelJson, objectNames) {
 
     return transformations;
 }
-    
-
-
